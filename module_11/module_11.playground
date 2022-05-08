@@ -1,0 +1,196 @@
+// Что требуется для успешного выполнения задания:
+//Переменная, которая хранит в себе режим управления: ручной или автопилот. Если включен режим ручного управления, то будем считать, что автопилот отключен.
+
+var autopilotIsOn: Bool = false // Автопилот включён
+
+//Должно быть реализовано хранение каких-либо характеристик автомобиля, например:
+//Масса: 2108 кг
+
+let carWeightInKg = 2108
+
+//Длина: 4976 мм
+
+let carLengthInMm = 4976
+
+//Ширина (с учетом боковых зеркал): 1963 мм
+
+let carWidthInMm = 1963
+
+//Высота: 1435 мм
+
+let carHeightInMm = 1435
+
+//Колесная база: 2959 мм
+
+let carWheelSpanInMm = 2959
+
+//Клиренс: 154.9 мм
+
+let carGourngClearanceInMm = 154.9
+
+//Объем багажника: 900 литров
+
+let carTrunkVolumeInL = 900
+
+//Должно быть реализовано хранение функционала машины. Обязательный функционал:
+
+var musicIsPlaying : Bool = false
+var musicVolume : Int = 50
+var musicMuted : Bool = false
+var musicPlaybackSpeed : Int = 100
+
+var sunroofOpenDegree : Int = 0 // Степень открытости люка в процентах
+
+var fanSpeed : Int = 0 // Скорость вентилятора обдува
+
+var ACTemp : Int = 21 // Температура кондиционированного воздуха
+var ACIsOn : Bool = false // Кондиционер включён
+
+var navIsOn : Bool = false // GPS-навигация включена
+
+var nearestSupercharger : String = "ул. Осенняя, 24 (расстояние: 12 км.)" // Ближайшая станция подзарядки на данный момент
+
+enum carControls {
+    case PlayPause, VolumeUp, VolumeDown, Mute, Rewind, FastForward // кнопки управления музыкой
+    case sunroofOpenMore, sunroofOpenLess, sunroofOpenFull, sunroofClose // кнопки управления люком
+    case fanMore, fanLess, fanFull, fanOff // кнопки управления вентилятором обдува
+    case ACOnOff, ACTempUp, ACTempDown // кнопки управления кондиционером воздуха
+    case autopilotOnOff // Включение/выключение автопилота
+    case navOnOff // Включение/выключение GPS-навигации
+}
+
+var pressedButton = carControls.PlayPause // Заменить на обработку нажатий кнопок
+
+switch pressedButton {
+
+    //управление музыкой,
+
+case .VolumeUp:
+    musicVolume += 1
+    if musicVolume>100 {musicVolume=100}
+case .VolumeDown:
+    musicVolume -= 1
+    if musicVolume<0 {musicVolume=0}
+case .Mute:
+    musicMuted = !musicMuted
+case .Rewind:
+    musicPlaybackSpeed = -200
+case .FastForward:
+    musicPlaybackSpeed = 200
+case .PlayPause:
+    if musicPlaybackSpeed != 100 { // Кнопка нажата во время прокрутки трека вперёд или назад
+        musicPlaybackSpeed = 100
+        musicIsPlaying = false
+    } else {
+        musicIsPlaying = !musicIsPlaying
+    }
+
+    //люком (степень его открытия измеряется в процентах),
+
+case .sunroofOpenMore:
+    sunroofOpenDegree += 1
+    if sunroofOpenDegree > 100 {sunroofOpenDegree = 100}
+
+case .sunroofOpenLess:
+    sunroofOpenDegree -= 1
+    if sunroofOpenDegree<0 {sunroofOpenDegree = 0}
+    
+case .sunroofOpenFull:
+    sunroofOpenDegree = 100
+
+case .sunroofClose:
+    sunroofOpenDegree = 0
+
+    //скорость вентилятора обдува,
+ 
+case .fanMore:
+    fanSpeed += 10
+    if fanSpeed>100 {fanSpeed = 100}
+
+case .fanLess:
+    fanSpeed -= 10
+    if fanSpeed<0 {fanSpeed = 0}
+    
+case .fanFull:
+    fanSpeed = 100
+
+case .fanOff:
+    fanSpeed = 0
+    
+    //климатические установки для водительского места.
+    
+case .ACOnOff:
+    ACIsOn = !ACIsOn
+    
+case .ACTempUp:
+    ACTemp += 1
+    if ACTemp > 30 {ACTemp = 30}
+    
+case .ACTempDown:
+    ACTemp -= 1
+    if ACTemp<15 {ACTemp = 15}
+    
+    
+//Если пользователь включает какую-либо функцию, например, тот же автопилот, должно выводиться сообщение о том, что это может быть опасно для водителя и нужно следить за движением автомобиля.
+
+case .autopilotOnOff:
+    autopilotIsOn = !autopilotIsOn
+    if autopilotIsOn {
+        print ("Автопилот включён. Помните о возможных опасностях на дороге: держите руки на руле и следите за движением автомобиля.")
+    } else {
+        print ("Автопилот выключен.")
+    }
+
+case .navOnOff:
+    navIsOn = !navIsOn
+    if navIsOn {
+        print ("GPS-навигация включена. Внимательно следите за дорогой.")
+    } else {
+        print ("GPS-навигация выключена.")
+    }
+    
+}
+
+
+
+//Должна быть реализована система обработки ошибок, которые могут произойти. Если сработала ошибка, то нужно вывести соответствующее сообщение в консоль, указать, какая именно ошибка, и как её можно решить. Например: потеря на дороге → нужно включить GPS, низкий заряд батареи → нужно сообщить об этом и отобразить ближайшую станцию подзарядки. Проявите фантазию! Параметров может быть неограниченное количество, но их нужно обрабатывать и выводить соответствующие сообщения в консоль. Желательно использовать do-catch, хотя и необязательно, т.к. данная тема в полном объеме не была пройдена однако какие-то базовые вещи в данном модуле были даны.
+
+enum carAlerts: Error {
+    case lostWay // Потерялся
+    case lowBattery // Низкий заряд батареи
+    case autopilotFailure // Отказ автопилота
+    case tyrePressure // Низкое давление в шинах
+    case laneDeparture // Выезд на разделительную полосу
+}
+
+var lostWay : Bool = false
+var lowBattery : Bool = false
+var autopilotFailure : Bool = false
+var tyrePressure : Bool = false
+var laneDeparture : Bool = false
+
+func checkAlerts() throws {
+    if lostWay {throw carAlerts.lostWay}
+    if lowBattery {throw carAlerts.lowBattery}
+    if autopilotFailure {throw carAlerts.autopilotFailure}
+    if tyrePressure {throw carAlerts.tyrePressure}
+    if laneDeparture {throw carAlerts.laneDeparture}
+}
+
+do {
+    try checkAlerts()
+} catch carAlerts.lostWay {
+    print ("Похоже, вы потерялись. Включаю GPS-навигацию.")
+    navIsOn = true
+} catch carAlerts.lowBattery {
+    print ("Батарея почти разряжена. Ближайшая станция: /(nearestSupercharger) ")
+} catch carAlerts.autopilotFailure {
+    print ("Отказ автопилота. Немедленно возьмите управление на себя!")
+    autopilotIsOn = false
+} catch carAlerts.tyrePressure {
+    print ("Проверьте давление в шинах.")
+} catch carAlerts.laneDeparture {
+    print ("Съезд с полосы! Включаю автопилот!")
+    autopilotIsOn = true
+}
+
