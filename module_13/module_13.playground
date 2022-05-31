@@ -1,0 +1,97 @@
+
+//Создайте кортеж для двух человек с одинаковыми типами данных и параметрами.
+//При том одни значения доставайте по индексу, а другие — по параметру.
+
+let personOne = (name: "Michael Scott", position: "Regional office manager", IQ: 75)
+let personTwo = (name: "Jim Halpert", position: "Sales manager", IQ: 135)
+
+let nameOne = personOne.0
+let nameTwo = personTwo.name
+
+//Создайте массив «дни в месяцах» (12 элементов содержащих количество дней в соответствующем месяце).
+
+let daysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+//Используя цикл for и этот массив:
+//выведите количество дней в каждом месяце
+
+for (month, days) in daysInMonths.enumerated() {
+    print("Месяц: \(month+1)\tЧисло дней: \(days)")
+}
+
+print("---")
+
+//используйте еще один массив с именами месяцев чтобы вывести название месяца + количество дней
+
+let monthNames = ["январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
+for (month, days) in daysInMonths.enumerated() {
+    print("Месяц: \(monthNames[month]). Число дней: \(days)")
+}
+
+print("---")
+
+//сделайте тоже самое, но используя массив кортежей с параметрами (имя месяца, количество дней)
+
+let year = [("январь", 31), ("февраль", 28), ("март", 31), ("апрель", 30), ("май", 31), ("июнь", 30), ("июль", 31), ("август", 31), ("сентябрь", 30), ("октябрь", 31), ("ноябрь", 30), ("декабрь", 31)]
+
+for (month, days) in year {
+        print("Месяц: \(month). Число дней: \(days)")
+}
+
+print("---")
+
+//сделайте тоже самое, только выводите дни в обратном порядке (порядок в исходном массиве не меняется)
+
+for (month, days) in year.reversed() {
+        print("Месяц: \(month). Число дней: \(days)")
+}
+
+print("---")
+
+//для произвольно выбранной даты (месяц и день) посчитайте количество дней до конца года
+
+let monthDay = (month: 5, day: 31)
+
+let remainingDaysThisMonth = daysInMonths[monthDay.month] - monthDay.day
+let remainingDaysThisYear = daysInMonths[monthDay.month-1...11].reduce(remainingDaysThisMonth,+)
+
+print("Сегодня \(monthDay.day)/\(monthDay.month), и дней до конца этого кошмарного года у нас осталось \(remainingDaysThisYear).")
+
+print("---")
+
+//Создайте словарь, как журнал студентов, где имя и фамилия студента это ключ, а оценка за экзамен — значение.
+
+var studentRegistry = ["Michael Scott": 1, "Jim Halpert": 4, "Jenna Fischer": 5]
+
+//Повысьте студенту оценку за экзамен
+
+studentRegistry.updateValue(2, forKey: "Michael Scott")
+
+//Если оценка положительная (4 или 5) или удовлетворительная (3), то выведите сообщение с поздравлением, отрицательная (1, 2) - отправьте на пересдачу
+
+for (student, mark) in studentRegistry {
+    mark >= 3 ? print("\(student), поздравляем, вы сдали экзамен.") : print("\(student) — на пересдачу!")
+}
+
+print("---")
+
+
+//Добавьте еще несколько студентов — это ваши новые одногруппники!
+
+studentRegistry["Rainn Wilson"] = 5
+studentRegistry["Mindy Kaling"] = 3
+studentRegistry["Ed Helms"] = 2
+studentRegistry["B.J.Novak"] = 3
+
+//Удалите одного студента — он отчислен
+
+studentRegistry.removeValue(forKey: "Ed Helms")
+
+//Посчитайте средний балл всей группы по итогам экзамена.
+
+let averageMark:Double = Double(studentRegistry.values.reduce(0, +))/Double(studentRegistry.count)
+
+print("Сейчас, когда в группе осталось \(studentRegistry.count) студентов, её средний балл — \(averageMark)")
+
+
+
