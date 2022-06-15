@@ -1,0 +1,96 @@
+import Foundation
+
+print("1.") //Создайте перечисление для ошибок. Добавьте в него 3 кейса: ошибка 400, ошибка 404, ошибка 500.
+
+enum ServerError: String, LocalizedError {
+    case badRequest = "Error 400: Bad Request" // 400
+    case notFound = "Error 404: Not Found" // 404
+    case internalServerError = "Error 500: Internal Server Error" // 500
+    
+    var errorDescription: String? {
+        rawValue
+    }
+}
+
+//Далее создайте переменную, которая будет хранить в себе какую-либо ошибку (400 или 404 или 500). И при помощи do-catch сделайте обработку ошибок перечисления. Для каждой ошибки должно быть выведено сообщение в консоль.
+
+var currentError:ServerError = .badRequest
+
+do {
+    throw currentError
+} catch {
+    if let error = error as? ServerError {
+        print(error.localizedDescription)
+    } else {
+        print(error)
+    }
+}
+    
+print ("\n2.") //Теперь добавьте проверку переменных в генерирующую функцию и обрабатывайте её!
+
+func checkServerErrors (_ currentError:ServerError) throws {
+    throw currentError
+}
+
+currentError = .notFound
+
+do {
+    try checkServerErrors(currentError)
+} catch {
+    if let error = error as? ServerError {
+        print(error.localizedDescription)
+    } else {
+        print(error)
+    }
+}
+
+print("\n3.") //Напишите функцию, которая будет принимать на вход два разных типа и проверять: если типы входных значений одинаковые, то вывести сообщение “Yes”, в противном случае — “No”.
+
+func equateTypes<T, E> (_ a: T, _ b: E) {
+    if type(of: a) == type(of: b) {
+        print("Yes. \(a) and \(b) are indeed the same type — \(type(of: a)).")
+    } else {
+        print("No. The type of \(a) is \(type(of: a)), whereas \(b) is a \(type(of: b)).") }
+}
+
+let a:Double = 0.5
+let b:Double = 1.7
+let c: String = "Test"
+
+equateTypes(a, b)
+equateTypes(a, c)
+
+print("\n4.")//Реализуйте то же самое, но если тип входных значений различается, выбросите исключение. Если тип одинаковый — тоже выбросите исключение, но оно уже будет говорить о том, что типы одинаковые. Не бойтесь этого. Ошибки — это не всегда про плохой результат.
+
+enum TypeErrors:Error {
+    case same
+    case different
+}
+
+func equateTypesErr<T, E> (_ a: T, _ b: E) throws {
+    if type(of: a) == type(of: b) {
+        throw TypeErrors.same
+    } else {
+        throw TypeErrors.different
+    }
+}
+
+    do {
+        try equateTypesErr(a, b)
+    } catch TypeErrors.same {
+        print("Yes")
+    } catch TypeErrors.different {
+        print("No")
+    }
+
+print("\n5)")//5. Напишите функцию, которая принимает на вход два любых значения и сравнивает их при помощи оператора равенства ==.
+
+func valuesAreEqual<T: Equatable> (_ a: T, _ b: T) -> Bool {
+    return a == b
+}
+
+if valuesAreEqual("Test", "Test") {
+    print("The values are equal.")
+} else {
+    print("The values are not equal.")
+}
